@@ -17,7 +17,7 @@ import com.madongqiang.yeareffect.event.BackEvent;
 
 import de.greenrobot.event.EventBus;
 
-public class SecondActivity extends AppCompatActivity {
+public class BigSignCardActivity extends AppCompatActivity {
     private ImageView ivBig;
     private boolean firstInit = true;
     private int originWidth;
@@ -25,6 +25,9 @@ public class SecondActivity extends AppCompatActivity {
     private float lastInFraction = 0;
     private float lastOutFraction = 0;
     private boolean animationFinished = false;
+
+    private static final double VIEW_WIDTH_SCREEN_WIDTH = 527D / 750D;
+    private static final double VIEW_HEIGHT_WIDTH = 1164D / 527D;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,9 +36,15 @@ public class SecondActivity extends AppCompatActivity {
         //去除状态栏
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        setContentView(R.layout.activity_second);
+        setContentView(R.layout.activity_big_sign_card);
         ViewGroup layerBig = findViewById(R.id.layer_big);
         ivBig = findViewById(R.id.iv_big);
+
+        int width = (int) (getResources().getDisplayMetrics().widthPixels * VIEW_WIDTH_SCREEN_WIDTH);
+        ViewGroup.LayoutParams params = ivBig.getLayoutParams();
+        params.width = width;
+        params.height = (int) (width * VIEW_HEIGHT_WIDTH);
+        ivBig.setLayoutParams(params);
 
         layerBig.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
@@ -45,7 +54,7 @@ public class SecondActivity extends AppCompatActivity {
                     originWidth = ivBig.getMeasuredWidth();
 
                     reverseAnimator = ValueAnimator.ofInt(originWidth, 0, originWidth, 0, originWidth, 0, originWidth, 0, originWidth, 0, originWidth, 0, originWidth, 0, originWidth);
-                    reverseAnimator.setDuration(2000);
+                    reverseAnimator.setDuration(1500);
                     reverseAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
                     reverseAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
                         @Override
@@ -100,7 +109,7 @@ public class SecondActivity extends AppCompatActivity {
             @Override
             public void onAnimationEnd(Animator animation) {
                 EventBus.getDefault().post(new BackEvent());
-                KShareViewActivityManager.getInstance(SecondActivity.this).finish(SecondActivity.this);
+                KShareViewActivityManager.getInstance(BigSignCardActivity.this).finish(BigSignCardActivity.this);
             }
         });
         exitAnimator.start();

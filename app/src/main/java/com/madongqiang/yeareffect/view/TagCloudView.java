@@ -22,6 +22,7 @@ package com.madongqiang.yeareffect.view;
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Color;
@@ -37,6 +38,7 @@ import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.view.animation.DecelerateInterpolator;
 
 import com.madongqiang.yeareffect.R;
 
@@ -175,35 +177,46 @@ public class TagCloudView extends ViewGroup implements Runnable, TagsAdapter.OnD
     }
 
     private void initFromAdapter() {
-        this.postDelayed(new Runnable() {
+        this.post(new Runnable() {
             @Override
             public void run() {
                 centerX = (getRight() - getLeft()) / 2;
                 centerY = (getBottom() - getTop()) / 2;
+
                 radius = Math.min(centerX * radiusPercent, centerY * radiusPercent);
-                mTagCloud.setRadius((int) radius);
+                ValueAnimator animator = ValueAnimator.ofFloat(0, radius);
+                animator.setDuration(400);
+                animator.setInterpolator(new DecelerateInterpolator());
+                animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                    @Override
+                    public void onAnimationUpdate(ValueAnimator animation) {
+                        radius = (float) animation.getAnimatedValue();
+                        mTagCloud.setRadius((int) radius);
 
-                mTagCloud.setTagColorLight(lightColor);//higher color
-                mTagCloud.setTagColorDark(darkColor);//lower color
+                        mTagCloud.setTagColorLight(lightColor);//higher color
+                        mTagCloud.setTagColorDark(darkColor);//lower color
 
-                mTagCloud.clear();
-                removeAllViews();
-                for (int i = 0; i < tagsAdapter.getCount(); i++) {
-                    //binding view to each tag
-                    Tag tag = new Tag(tagsAdapter.getPopularity(i));
-                    View view = tagsAdapter.getView(getContext(), i, TagCloudView.this);
-                    tag.setView(view);
-                    mTagCloud.add(tag);
-                    addListener(view, i);
-                }
-                mTagCloud.create(true);
-                mTagCloud.setAngleX(mAngleX);
-                mTagCloud.setAngleY(mAngleY);
-                mTagCloud.update();
+                        mTagCloud.clear();
+                        removeAllViews();
+                        for (int i = 0; i < tagsAdapter.getCount(); i++) {
+                            //binding view to each tag
+                            Tag tag = new Tag(tagsAdapter.getPopularity(i));
+                            View view = tagsAdapter.getView(getContext(), i, TagCloudView.this);
+                            tag.setView(view);
+                            mTagCloud.add(tag);
+                            addListener(view, i);
+                        }
+                        mTagCloud.create(true);
+                        mTagCloud.setAngleX(mAngleX);
+                        mTagCloud.setAngleY(mAngleY);
+                        mTagCloud.update();
 
-                resetChildren();
+                        resetChildren();
+                    }
+                });
+                animator.start();
             }
-        }, 0);
+        });
     }
 
     private void addListener(View view, final int position) {

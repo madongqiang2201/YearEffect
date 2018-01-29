@@ -9,10 +9,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity"/>
+        <activity android:name=".MainActivity" android:screenOrientation="portrait"/>
         <activity
-            android:name=".SecondActivity"
-            android:theme="@style/AppTrans" />
+            android:name=".BigSignCardActivity"
+            android:theme="@style/AppTrans"
+            android:screenOrientation="portrait"/>
         <activity android:name=".EntranceActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

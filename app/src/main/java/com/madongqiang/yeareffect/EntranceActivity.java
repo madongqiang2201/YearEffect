@@ -18,7 +18,7 @@ public class EntranceActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(EntranceActivity.this, MainActivity.class));
-                overridePendingTransition(R.anim.bottom_in,R.anim.top_out);
+//                overridePendingTransition(R.anim.bottom_in,R.anim.top_out);
             }
         });
     }

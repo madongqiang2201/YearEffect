@@ -1,5 +1,6 @@
 package com.madongqiang.yeareffect;
 
+import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +14,15 @@ import com.madongqiang.yeareffect.view.TagsAdapter;
  */
 public class ViewTagsAdapter extends TagsAdapter {
     private OnItemClickListener onItemClickListener;
+    private int width;
+    private int height;
+    private static final double VIEW_WIDTH_SCREEN_HEIGHT = 100D / 750D;
+    private static final double VIEW_HEIGHT_WIDTH = 469D / 212D;
+
+    public ViewTagsAdapter(Activity activity) {
+        width = (int) (activity.getResources().getDisplayMetrics().widthPixels * VIEW_WIDTH_SCREEN_HEIGHT);
+        height = (int) (width * VIEW_HEIGHT_WIDTH);
+    }
 
     @Override
     public int getCount() {
@@ -23,6 +33,10 @@ public class ViewTagsAdapter extends TagsAdapter {
     public View getView(final Context context, final int position, ViewGroup parent) {
         final View view = LayoutInflater.from(context).inflate(R.layout.tag_item_view, parent, false);
         final ImageView ivSmall = view.findViewById(R.id.iv_small);
+        ViewGroup.LayoutParams params = ivSmall.getLayoutParams();
+        params.width = width;
+        params.height = height;
+        ivSmall.setLayoutParams(params);
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

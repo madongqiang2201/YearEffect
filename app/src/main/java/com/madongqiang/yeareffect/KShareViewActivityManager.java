@@ -30,36 +30,44 @@ import java.util.List;
  * Created by kot32 on 16/1/21. FirstActivity 中的View 暂不支持 WRAP_CONTENT ,SecondActivity 中的View 可以
  */
 public class KShareViewActivityManager {
-
+    /**
+     * 当前要启动其他 activity 的 activity
+     */
     private Activity one;
-
+    /**
+     * 被启动的 activity
+     */
     private Class two;
-
     private Handler replaceViewHandler;
-
-    private HashMap<Object, View> shareViews     = new HashMap<>();
-
+    /**
+     * 共享的元素在当前 activity 的view
+     */
+    private HashMap<Object, View> shareViews = new HashMap<>();
+    /**
+     * 共享的元素在目标 activity 的view
+     */
     private HashMap<View, ShareViewInfo> shareViewPairs = new HashMap<>();
-
-    private KShareViewActivityAction         kShareViewActivityAction;
-
+    private KShareViewActivityAction kShareViewActivityAction;
+    /**
+     * 启动的 activity 跟布局
+     */
     private ViewGroup secondActivityLayout;
-
+    /** 启动的 activity 布局文件 ID **/
+    private int targetResourceId;
     private ViewGroup copyOfFirstActivityLayout;
-
     private ViewGroup baseFrameLayout;
 
-    public long                             duration       = 500;
-
-    private boolean                          isMatchedFirst;
-
-    private boolean                          isMatchedSecond;
-
-    private List<View> copyViews      = new ArrayList<>(2);
-
-    private int                              mRequestCode   = -255;
+    public long duration = 500;
+    private boolean isMatchedFirst;
+    private boolean isMatchedSecond;
+    private List<View> copyViews = new ArrayList<>(2);
+    private int mRequestCode = -255;
 
     private Intent mIntent;
+
+    private static KShareViewActivityManager INSTANCE;
+    private static final double VIEW_WIDTH_SCREEN_WIDTH = 527D / 750D;
+    private static final double VIEW_HEIGHT_WIDTH = 1164D / 527D;
 
     {
         replaceViewHandler = new Handler() {
@@ -91,8 +99,6 @@ public class KShareViewActivityManager {
         };
     }
 
-    private static KShareViewActivityManager INSTANCE;
-
     /**
      * 每两个Activity 对应一个Manager
      *
@@ -116,11 +122,6 @@ public class KShareViewActivityManager {
 
     /**
      * 根据两个Activity 的布局中的View Tag 是否相同来判断是否属于一个元素
-     *
-     * @param one
-     * @param two
-     * @param targetActivityLayoutResourceId
-     * @param shareViews
      */
     public void startActivity(Activity one, Class two, int oringinActivityLayoutResourceId,
                               int targetActivityLayoutResourceId, View... shareViews) {
@@ -139,6 +140,7 @@ public class KShareViewActivityManager {
 
         baseFrameLayout = (ViewGroup) one.findViewById(Window.ID_ANDROID_CONTENT);
 
+        targetResourceId = targetActivityLayoutResourceId;
         secondActivityLayout = (ViewGroup) LayoutInflater.from(one).inflate(targetActivityLayoutResourceId, null);
 
         copyOfFirstActivityLayout = (ViewGroup) LayoutInflater.from(one).inflate(oringinActivityLayoutResourceId, null);
@@ -352,12 +354,24 @@ public class KShareViewActivityManager {
     }
 
     private void findAllTargetViews(ViewGroup viewGroup) {
-
+        // TODO: 2018/1/29 layout
         for (Object keyTag : shareViews.keySet()) {
-            shareViewPairs.put(shareViews.get(keyTag), new ShareViewInfo(secondActivityLayout.findViewWithTag(keyTag),
-                                                                         new Point()));
-        }
+            if (targetResourceId == R.layout.activity_big_sign_card && "img".equals(keyTag)) {
+                View view = secondActivityLayout.findViewWithTag(keyTag);
 
+                int width = (int) (one.getResources().getDisplayMetrics().widthPixels * VIEW_WIDTH_SCREEN_WIDTH);
+                ViewGroup.LayoutParams params = view.getLayoutParams();
+                params.width = width;
+                params.height = (int) (width * VIEW_HEIGHT_WIDTH);
+                view.setLayoutParams(params);
+
+                shareViewPairs.put(shareViews.get(keyTag), new ShareViewInfo(view,
+                        new Point()));
+            } else {
+                shareViewPairs.put(shareViews.get(keyTag), new ShareViewInfo(secondActivityLayout.findViewWithTag(keyTag),
+                        new Point()));
+            }
+        }
     }
 
     private int[] getViewLocationOnScreen(View view) {

@@ -29,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
         EventBus.getDefault().register(this);
         tagCloudView = (TagCloudView) findViewById(R.id.tag_cloud);
 
-        viewTagsAdapter = new ViewTagsAdapter();
+        viewTagsAdapter = new ViewTagsAdapter(this);
         viewTagsAdapter.setOnItemClickListener(new ViewTagsAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
@@ -40,8 +40,8 @@ public class MainActivity extends AppCompatActivity {
                         .start();
                 KShareViewActivityManager
                         .getInstance(MainActivity.this)
-                        .startActivity(MainActivity.this, SecondActivity.class,
-                                R.layout.tag_item_view,R.layout.activity_second, view);
+                        .startActivity(MainActivity.this, BigSignCardActivity.class,
+                                R.layout.tag_item_view,R.layout.activity_big_sign_card, view);
             }
         });
         tagCloudView.setAdapter(viewTagsAdapter);
