@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/layer_container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:background="@drawable/card_bg">
+
+    <com.madongqiang.yeareffect.view.TagCloudView
+        android:id="@+id/tag_cloud"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:autoScrollMode="decelerate"
+        app:radiusPercent="0.6"
+        app:scrollSpeed="3" />
+</FrameLayout>

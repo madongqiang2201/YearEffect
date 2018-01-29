@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/layer_big"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/card_bg">
+    <ImageView
+        android:id="@+id/iv_big"
+        android:layout_width="159dp"
+        android:layout_height="351.75dp"
+        android:layout_gravity="center"
+        android:background="@drawable/card_positive"
+        android:tag="img"/>
+</FrameLayout>
