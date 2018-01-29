@@ -62,7 +62,8 @@ public class MainActivity extends AppCompatActivity {
     public void onEvent(BackEvent event) {
         tagCloudView.animate()
                 .alpha(1f)
-                .setDuration(KShareViewActivityManager.getInstance(MainActivity.this).duration)
+                .setDuration(300)
+                .setStartDelay(KShareViewActivityManager.getInstance(this).duration - 80)
                 .start();
     }
 }

@@ -57,7 +57,7 @@ public class KShareViewActivityManager {
     private ViewGroup copyOfFirstActivityLayout;
     private ViewGroup baseFrameLayout;
 
-    public long duration = 500;
+    public long duration = 300;
     private boolean isMatchedFirst;
     private boolean isMatchedSecond;
     private List<View> copyViews = new ArrayList<>(2);
@@ -125,10 +125,6 @@ public class KShareViewActivityManager {
      */
     public void startActivity(Activity one, Class two, int oringinActivityLayoutResourceId,
                               int targetActivityLayoutResourceId, View... shareViews) {
-
-        // Reflect oAReflect = Reflect.on(one);
-        // Instrumentation instrumentation = oAReflect.get("mInstrumentation");
-        // oAReflect.set("mInstrumentation", new AnimationInstrumentation(instrumentation));
         this.shareViews.clear();
         this.shareViewPairs.clear();
 
@@ -170,7 +166,7 @@ public class KShareViewActivityManager {
         mIntent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
         if (mRequestCode != -255) {
             one.startActivityForResult(mIntent,mRequestCode);
-        }else{
+        } else {
             one.startActivity(mIntent);
         }
         one.overridePendingTransition(0, 0);
@@ -264,7 +260,7 @@ public class KShareViewActivityManager {
                             startIntent();
                             replaceViewHandler.sendEmptyMessageDelayed(1, 500);
                         }
-                    });
+                    }, duration);
                 }
             });
 
@@ -291,12 +287,12 @@ public class KShareViewActivityManager {
                     target.overridePendingTransition(0, 0);
                     replaceViewHandler.sendEmptyMessageDelayed(1, 500);
                 }
-            });
+            }, duration - 100);
 
         }
     }
 
-    private void startViewAnimation(View origin, ShareViewInfo target, final int[] lock, final AnimationEnd animationEnd) {
+    private void startViewAnimation(View origin, ShareViewInfo target, final int[] lock, final AnimationEnd animationEnd, long duration) {
 
         float w2 = target.width;
         float w1 = origin.getWidth();
@@ -394,16 +390,16 @@ public class KShareViewActivityManager {
     private static class ShareViewInfo {
 
         public View view;
-        public Point locationOnScreen;
-        public float width;
+        private Point locationOnScreen;
+        private float width;
         public float height;
 
-        public ShareViewInfo(View view, Point locationOnScreen){
+        private ShareViewInfo(View view, Point locationOnScreen) {
             this.view = view;
             this.locationOnScreen = locationOnScreen;
         }
 
-        public ShareViewInfo(View view, Point locationOnScreen, float width, float height){
+        private ShareViewInfo(View view, Point locationOnScreen, float width, float height) {
             this.view = view;
             this.locationOnScreen = locationOnScreen;
             this.width = width;
